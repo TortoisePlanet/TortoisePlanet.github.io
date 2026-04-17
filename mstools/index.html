@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduHub — Learning Tools for Teens</title>
+  <meta name="description" content="EduHub: Free educational tools, study guides, and resources made for teens and students." />
+  <style>
+    /* ── Reset & base ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f1117;
+      --surface:   #1a1d27;
+      --card:      #22263a;
+      --border:    #2e3350;
+      --accent1:   #6c63ff;
+      --accent2:   #00d4aa;
+      --accent3:   #ff6b6b;
+      --accent4:   #ffbe0b;
+      --accent5:   #3a86ff;
+      --accent6:   #ff006e;
+      --text:      #e8eaf6;
+      --muted:     #8b90b8;
+      --radius:    12px;
+      --shadow:    0 4px 24px rgba(0,0,0,.45);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ── Top nav ─────────────────────────────────────────────── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15,17,23,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      height: 58px;
+    }
+
+    .nav-logo {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      white-space: nowrap;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 0.25rem;
+      list-style: none;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      transition: color .15s, background .15s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      background: var(--card);
+    }
+
+    .nav-search {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 0.75rem;
+      gap: 0.5rem;
+    }
+
+    .nav-search input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.85rem;
+      width: 180px;
+      padding: 0.4rem 0;
+    }
+
+    .nav-search input::placeholder { color: var(--muted); }
+
+    .nav-search svg { color: var(--muted); flex-shrink: 0; }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 4rem 2rem 3rem;
+      background: radial-gradient(ellipse 80% 60% at 50% -20%, rgba(108,99,255,.18) 0%, transparent 70%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      border: 1px solid rgba(0,212,170,.3);
+      border-radius: 999px;
+      padding: 0.3rem 0.9rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin: 0 auto 2rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0.65rem 1.4rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, opacity .15s;
+    }
+
+    .btn:active { transform: scale(.97); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent1), #5a52f0);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(108,99,255,.4);
+    }
+
+    .btn-primary:hover { opacity: .9; box-shadow: 0 6px 24px rgba(108,99,255,.55); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover { background: var(--card); }
+
+    /* ── Stats strip ─────────────────────────────────────────── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+      padding: 1.5rem 2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat { text-align: center; }
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.1rem; }
+
+    /* ── Section ─────────────────────────────────────────────── */
+    section { padding: 3rem 2rem; max-width: 1200px; margin: 0 auto; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+    }
+
+    .section-title span {
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .section-link {
+      font-size: 0.82rem;
+      color: var(--accent1);
+      font-weight: 500;
+    }
+    .section-link:hover { text-decoration: underline; }
+
+    /* ── Subject cards grid ──────────────────────────────────── */
+    .subjects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+    }
+
+    .subject-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .subject-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .2s;
+    }
+
+    .subject-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .subject-card:hover::before { opacity: 1; }
+
+    .subject-card[data-color="purple"]  { --c: var(--accent1); }
+    .subject-card[data-color="teal"]    { --c: var(--accent2); }
+    .subject-card[data-color="red"]     { --c: var(--accent3); }
+    .subject-card[data-color="yellow"]  { --c: var(--accent4); }
+    .subject-card[data-color="blue"]    { --c: var(--accent5); }
+    .subject-card[data-color="pink"]    { --c: var(--accent6); }
+
+    .subject-card:hover { border-color: var(--c); box-shadow: 0 4px 20px rgba(0,0,0,.3), 0 0 0 1px var(--c); }
+
+    .subject-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.6rem;
+      display: block;
+    }
+
+    .subject-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .subject-count {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ── Tool cards ──────────────────────────────────────────── */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .tool-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.4rem;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s, border-color .2s;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+      border-color: var(--accent1);
+    }
+
+    .tool-icon-wrap {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      flex-shrink: 0;
+    }
+
+    .tool-body { flex: 1; min-width: 0; }
+
+    .tool-name {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .tool-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .tool-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      margin-top: 0.5rem;
+    }
+
+    /* ── Featured banner ─────────────────────────────────────── */
+    .featured-banner {
+      background: linear-gradient(135deg, rgba(108,99,255,.15) 0%, rgba(0,212,170,.1) 100%);
+      border: 1px solid rgba(108,99,255,.3);
+      border-radius: 16px;
+      padding: 2rem 2.5rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .featured-banner .featured-text { flex: 1; min-width: 200px; }
+    .featured-banner h2 { font-size: 1.4rem; font-weight: 800; margin-bottom: 0.5rem; }
+    .featured-banner p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ── Quiz card ───────────────────────────────────────────── */
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+
+    .quiz-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+
+    .quiz-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+    }
+
+    .quiz-card-header {
+      height: 90px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .quiz-card-body { padding: 1rem 1.1rem 1.25rem; }
+
+    .quiz-card-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .quiz-card-meta {
+      font-size: 0.75rem;
+      color: var(--muted);
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    /* ── Tips feed ───────────────────────────────────────────── */
+    .tips-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .tip-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent2);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 0.9rem 1.2rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+
+    .tip-item strong { color: var(--accent2); }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    footer a { color: var(--accent1); }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Utility ─────────────────────────────────────────────── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .tag-free    { background: rgba(0,212,170,.15); color: var(--accent2); }
+    .tag-popular { background: rgba(108,99,255,.15); color: var(--accent1); }
+    .tag-new     { background: rgba(255,107,107,.15); color: var(--accent3); }
+    .tag-beta    { background: rgba(255,190,11,.15);  color: var(--accent4); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; }
+      .nav-links { display: none; }
+      .nav-search input { width: 120px; }
+      .hero { padding: 2.5rem 1rem 2rem; }
+      section { padding: 2rem 1rem; }
+      .featured-banner { padding: 1.5rem; }
+      .stats { gap: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ──────────────────────────────────────────── -->
+<nav>
+  <span class="nav-logo">🐢 EduHub</span>
+  <ul class="nav-links">
+    <li><a href="#subjects">Subjects</a></li>
+    <li><a href="#tools">Study Tools</a></li>
+    <li><a href="#quizzes">Quizzes</a></li>
+    <li><a href="#resources">Resources</a></li>
+    <li><a href="#tips">Study Tips</a></li>
+  </ul>
+  <div class="nav-search">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" placeholder="Search tools…" aria-label="Search" />
+  </div>
+</nav>
+
+<!-- ── Hero ────────────────────────────────────────────────── -->
+<header class="hero">
+  <div class="hero-badge">✨ Built for Students, By Students</div>
+  <h1>Your <span>Learning Hub</span><br/>for Teen Students</h1>
+  <p>Free study tools, subject guides, interactive quizzes, and productivity apps — all in one place.</p>
+  <div class="hero-actions">
+    <a href="#tools" class="btn btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14.5 10c-.83 0-1.5-.67-1.5-1.5v-5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5z"/><path d="M20.5 10H19V8.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/><path d="M9.5 14c.83 0 1.5.67 1.5 1.5v5c0 .83-.67 1.5-1.5 1.5S8 21.33 8 20.5v-5c0-.83.67-1.5 1.5-1.5z"/><path d="M3.5 14H5v1.5c0 .83-.67 1.5-1.5 1.5S2 16.33 2 15.5 2.67 14 3.5 14z"/><path d="M14 14.5c0-.83.67-1.5 1.5-1.5h5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5h-5c-.83 0-1.5-.67-1.5-1.5z"/><path d="M15.5 19H14v1.5c0 .83.67 1.5 1.5 1.5s1.5-.67 1.5-1.5-.67-1.5-1.5-1.5z"/><path d="M10 9.5C10 8.67 9.33 8 8.5 8h-5C2.67 8 2 8.67 2 9.5S2.67 11 3.5 11h5c.83 0 1.5-.67 1.5-1.5z"/><path d="M8.5 5H10V3.5C10 2.67 9.33 2 8.5 2S7 2.67 7 3.5 7.67 5 8.5 5z"/></svg>
+      Explore Tools
+    </a>
+    <a href="#quizzes" class="btn btn-outline">Take a Quiz →</a>
+  </div>
+</header>
+
+<!-- ── Stats strip ──────────────────────────────────────────── -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-value">50+</div>
+    <div class="stat-label">Study Tools</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">12</div>
+    <div class="stat-label">Subjects</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">200+</div>
+    <div class="stat-label">Practice Quizzes</div>
+  </div>
+  <div class="stat">
+    <div class="stat-value">100%</div>
+    <div class="stat-label">Free Forever</div>
+  </div>
+</div>
+
+<!-- ── Subjects ─────────────────────────────────────────────── -->
+<section id="subjects">
+  <div class="section-header">
+    <h2 class="section-title">Browse by <span>Subject</span></h2>
+    <a href="#subjects" class="section-link">See all subjects →</a>
+  </div>
+  <div class="subjects-grid">
+    <div class="subject-card" data-color="blue">
+      <span class="subject-icon">🔢</span>
+      <div class="subject-name">Mathematics</div>
+      <div class="subject-count">14 tools</div>
+    </div>
+    <div class="subject-card" data-color="teal">
+      <span class="subject-icon">🔬</span>
+      <div class="subject-name">Science</div>
+      <div class="subject-count">11 tools</div>
+    </div>
+    <div class="subject-card" data-color="purple">
+      <span class="subject-icon">📖</span>
+      <div class="subject-name">English / ELA</div>
+      <div class="subject-count">9 tools</div>
+    </div>
+    <div class="subject-card" data-color="yellow">
+      <span class="subject-icon">🌍</span>
+      <div class="subject-name">History</div>
+      <div class="subject-count">8 tools</div>
+    </div>
+    <div class="subject-card" data-color="pink">
+      <span class="subject-icon">🌐</span>
+      <div class="subject-name">Geography</div>
+      <div class="subject-count">6 tools</div>
+    </div>
+    <div class="subject-card" data-color="red">
+      <span class="subject-icon">💻</span>
+      <div class="subject-name">Computer Science</div>
+      <div class="subject-count">7 tools</div>
+    </div>
+    <div class="subject-card" data-color="teal">
+      <span class="subject-icon">🎨</span>
+      <div class="subject-name">Art & Design</div>
+      <div class="subject-count">5 tools</div>
+    </div>
+    <div class="subject-card" data-color="blue">
+      <span class="subject-icon">🗣️</span>
+      <div class="subject-name">Languages</div>
+      <div class="subject-count">10 tools</div>
+    </div>
+    <div class="subject-card" data-color="yellow">
+      <span class="subject-icon">🎵</span>
+      <div class="subject-name">Music</div>
+      <div class="subject-count">4 tools</div>
+    </div>
+    <div class="subject-card" data-color="purple">
+      <span class="subject-icon">⚗️</span>
+      <div class="subject-name">Chemistry</div>
+      <div class="subject-count">6 tools</div>
+    </div>
+    <div class="subject-card" data-color="red">
+      <span class="subject-icon">📐</span>
+      <div class="subject-name">Geometry</div>
+      <div class="subject-count">5 tools</div>
+    </div>
+    <div class="subject-card" data-color="pink">
+      <span class="subject-icon">🧠</span>
+      <div class="subject-name">Psychology</div>
+      <div class="subject-count">3 tools</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Featured ─────────────────────────────────────────────── -->
+<section>
+  <div class="featured-banner">
+    <div class="featured-text">
+      <h2>🌟 Start with the Study Planner</h2>
+      <p>Organize your homework, set goals, and track your progress across all subjects — completely free with no sign-up needed.</p>
+    </div>
+    <a href="#tools" class="btn btn-primary">Open Study Planner →</a>
+  </div>
+</section>
+
+<!-- ── Study Tools ──────────────────────────────────────────── -->
+<section id="tools">
+  <div class="section-header">
+    <h2 class="section-title">Popular <span>Study Tools</span></h2>
+    <a href="#tools" class="section-link">View all 50+ tools →</a>
+  </div>
+  <div class="tools-grid">
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(108,99,255,.18)">📅</div>
+      <div class="tool-body">
+        <div class="tool-name">Study Planner</div>
+        <div class="tool-desc">Plan your week, schedule study sessions, and never miss a deadline.</div>
+        <span class="tool-tag tag-popular">Popular</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(0,212,170,.18)">🗂️</div>
+      <div class="tool-body">
+        <div class="tool-name">Flashcard Maker</div>
+        <div class="tool-desc">Create, flip, and memorize digital flashcards for any subject.</div>
+        <span class="tool-tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(58,134,255,.18)">🧮</div>
+      <div class="tool-body">
+        <div class="tool-name">Equation Solver</div>
+        <div class="tool-desc">Step-by-step solutions for algebra, calculus, and more — shows your work.</div>
+        <span class="tool-tag tag-popular">Popular</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(255,107,107,.18)">📝</div>
+      <div class="tool-body">
+        <div class="tool-name">Essay Outline Builder</div>
+        <div class="tool-desc">Structure your essays with guided prompts for intro, body, and conclusion.</div>
+        <span class="tool-tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(255,190,11,.18)">🔭</div>
+      <div class="tool-body">
+        <div class="tool-name">Science Simulator</div>
+        <div class="tool-desc">Run virtual lab experiments — physics, chemistry, and biology simulations.</div>
+        <span class="tool-tag tag-new">New</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(255,0,110,.18)">🌍</div>
+      <div class="tool-body">
+        <div class="tool-name">Interactive World Map</div>
+        <div class="tool-desc">Explore countries, capitals, flags, and historical timelines.</div>
+        <span class="tool-tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(108,99,255,.18)">🎧</div>
+      <div class="tool-body">
+        <div class="tool-name">Focus Music Player</div>
+        <div class="tool-desc">Lo-fi beats and ambient sounds designed to boost concentration.</div>
+        <span class="tool-tag tag-popular">Popular</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(0,212,170,.18)">📊</div>
+      <div class="tool-body">
+        <div class="tool-name">Grade Calculator</div>
+        <div class="tool-desc">Calculate weighted grades, GPA, and what score you need to pass.</div>
+        <span class="tool-tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(58,134,255,.18)">⏱️</div>
+      <div class="tool-body">
+        <div class="tool-name">Pomodoro Timer</div>
+        <div class="tool-desc">25-minute focus sprints with customizable break intervals.</div>
+        <span class="tool-tag tag-popular">Popular</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(255,107,107,.18)">📚</div>
+      <div class="tool-body">
+        <div class="tool-name">Citation Generator</div>
+        <div class="tool-desc">Auto-generate MLA, APA, and Chicago citations from a URL or ISBN.</div>
+        <span class="tool-tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(255,190,11,.18)">🗺️</div>
+      <div class="tool-body">
+        <div class="tool-name">Mind Map Creator</div>
+        <div class="tool-desc">Visually organize ideas, concepts, and notes with drag-and-drop nodes.</div>
+        <span class="tool-tag tag-new">New</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(255,0,110,.18)">🔤</div>
+      <div class="tool-body">
+        <div class="tool-name">Vocab Builder</div>
+        <div class="tool-desc">Daily word challenges, definitions, etymology, and spelling practice.</div>
+        <span class="tool-tag tag-beta">Beta</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Quizzes ──────────────────────────────────────────────── -->
+<section id="quizzes">
+  <div class="section-header">
+    <h2 class="section-title">Practice <span>Quizzes</span></h2>
+    <a href="#quizzes" class="section-link">See all quizzes →</a>
+  </div>
+  <div class="quiz-grid">
+    <div class="quiz-card">
+      <div class="quiz-card-header" style="background:linear-gradient(135deg,rgba(58,134,255,.25),rgba(108,99,255,.25))">📐</div>
+      <div class="quiz-card-body">
+        <div class="quiz-card-title">Algebra Basics</div>
+        <div class="quiz-card-meta"><span>⭐ 4.8</span><span>15 questions</span><span>Grade 8–10</span></div>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-card-header" style="background:linear-gradient(135deg,rgba(0,212,170,.25),rgba(58,134,255,.25))">🌎</div>
+      <div class="quiz-card-body">
+        <div class="quiz-card-title">World Geography</div>
+        <div class="quiz-card-meta"><span>⭐ 4.7</span><span>20 questions</span><span>All grades</span></div>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-card-header" style="background:linear-gradient(135deg,rgba(255,107,107,.25),rgba(255,0,110,.25))">⚗️</div>
+      <div class="quiz-card-body">
+        <div class="quiz-card-title">Periodic Table</div>
+        <div class="quiz-card-meta"><span>⭐ 4.9</span><span>25 questions</span><span>Grade 9–12</span></div>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-card-header" style="background:linear-gradient(135deg,rgba(255,190,11,.25),rgba(255,107,107,.25))">📜</div>
+      <div class="quiz-card-body">
+        <div class="quiz-card-title">US History</div>
+        <div class="quiz-card-meta"><span>⭐ 4.6</span><span>18 questions</span><span>Grade 8–11</span></div>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-card-header" style="background:linear-gradient(135deg,rgba(108,99,255,.25),rgba(255,0,110,.25))">📖</div>
+      <div class="quiz-card-body">
+        <div class="quiz-card-title">Grammar & Punctuation</div>
+        <div class="quiz-card-meta"><span>⭐ 4.5</span><span>12 questions</span><span>Grade 6–9</span></div>
+      </div>
+    </div>
+    <div class="quiz-card">
+      <div class="quiz-card-header" style="background:linear-gradient(135deg,rgba(0,212,170,.25),rgba(255,190,11,.25))">💻</div>
+      <div class="quiz-card-body">
+        <div class="quiz-card-title">Coding Fundamentals</div>
+        <div class="quiz-card-meta"><span>⭐ 4.8</span><span>10 questions</span><span>All grades</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Resources ────────────────────────────────────────────── -->
+<section id="resources">
+  <div class="section-header">
+    <h2 class="section-title">Helpful <span>Resources</span></h2>
+  </div>
+  <div class="tools-grid">
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(108,99,255,.18)">🎓</div>
+      <div class="tool-body">
+        <div class="tool-name">Khan Academy</div>
+        <div class="tool-desc">Free lessons and exercises for every subject from K–12 through college.</div>
+        <span class="tool-tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(0,212,170,.18)">🔭</div>
+      <div class="tool-body">
+        <div class="tool-name">NASA Science</div>
+        <div class="tool-desc">Explore space, Earth science, and NASA's STEM learning resources for students.</div>
+        <span class="tool-tag tag-free">Free</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(255,190,11,.18)">📰</div>
+      <div class="tool-body">
+        <div class="tool-name">Newsela</div>
+        <div class="tool-desc">Current events and non-fiction articles adapted to your reading level.</div>
+        <span class="tool-tag tag-popular">Popular</span>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <div class="tool-icon-wrap" style="background:rgba(58,134,255,.18)">💬</div>
+      <div class="tool-body">
+        <div class="tool-name">Duolingo</div>
+        <div class="tool-desc">Learn Spanish, French, Japanese, and 30+ other languages with daily streaks.</div>
+        <span class="tool-tag tag-popular">Popular</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Study Tips ───────────────────────────────────────────── -->
+<section id="tips">
+  <div class="section-header">
+    <h2 class="section-title">Study <span>Tips</span></h2>
+  </div>
+  <div class="tips-list">
+    <div class="tip-item"><strong>Spaced Repetition</strong> — Review material at increasing intervals (today → 3 days → 1 week) to lock it into long-term memory.</div>
+    <div class="tip-item"><strong>Active Recall</strong> — Instead of re-reading notes, close the book and write down everything you remember. It's more effective than passive review.</div>
+    <div class="tip-item"><strong>Pomodoro Technique</strong> — Study for 25 minutes, then take a 5-minute break. After four rounds, take a longer 20–30 minute break.</div>
+    <div class="tip-item"><strong>Teach It Back</strong> — Explain a concept out loud as if teaching someone else. Gaps in your understanding become obvious immediately.</div>
+    <div class="tip-item"><strong>Eliminate Distractions</strong> — Put your phone in another room while studying. Even silent phones on a desk reduce working memory by up to 20%.</div>
+    <div class="tip-item"><strong>Sleep Is Study Time</strong> — Memory consolidation happens during sleep. Pulling an all-nighter before a test usually hurts more than it helps.</div>
+  </div>
+</section>
+
+<!-- ── Footer ───────────────────────────────────────────────── -->
+<footer>
+  <p>🐢 <strong>EduHub</strong> — Free educational tools for teen students &amp; lifelong learners.</p>
+  <p style="margin-top:.5rem">Made with ❤️ by students, for students &middot; <a href="/">Home</a> &middot; <a href="#tools">Tools</a> &middot; <a href="#quizzes">Quizzes</a></p>
+</footer>
+
+</body>
+</html>
